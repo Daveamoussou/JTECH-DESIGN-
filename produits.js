@@ -77,7 +77,7 @@ const PRODUITS = [
 
     {
     // Photo : doit être un fichier présent dans le même dossier sur GitHub
-    image: "lenovo-t16g1",
+    image: "lenovo-t16g1.jpg",
 
     // Petit badge affiché sur la photo (ex: "Neuf en carton", "Occasion")
     badge: "Neuf en carton",
