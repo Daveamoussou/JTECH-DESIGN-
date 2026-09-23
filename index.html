@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>J-Tech Design</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14213D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="J-Tech">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon.svg">
+<script src="produits.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #14213D;
+    --navy-soft: #1E2E52;
+    --cream: #FAF7F2;
+    --panel: #FFFFFF;
+    --amber: #E8A33D;
+    --amber-deep: #C9821F;
+    --teal: #3A6B6B;
+    --ink: #1F2421;
+    --ink-soft: #5B6260;
+    --line: #E4DFD4;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --cream: #14171C;
+      --panel: #1C2028;
+      --ink: #EDEBE6;
+      --ink-soft: #A7ADB3;
+      --line: #2A2F38;
+      --navy: #0E1526;
+      --navy-soft: #182238;
+    }
+  }
+  :root[data-theme="dark"] {
+    --cream: #14171C;
+    --panel: #1C2028;
+    --ink: #EDEBE6;
+    --ink-soft: #A7ADB3;
+    --line: #2A2F38;
+    --navy: #0E1526;
+    --navy-soft: #182238;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    height: 100%;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .brand { font-family: 'Space Grotesk', sans-serif; }
+
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ---- Header ---- */
+  header {
+    background: var(--navy);
+    color: var(--cream);
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: "";
+    position: absolute;
+    right: -40px; top: -60px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,163,61,0.22), transparent 70%);
+  }
+  .brand-row { display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+  .brand-mark {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--amber);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--navy);
+    font-size: 17px; flex-shrink: 0;
+  }
+  .brand { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .tagline { font-size: 13.5px; color: #C6CBDC; margin-top: 2px; }
+  h1.hero-title {
+    font-size: 26px; line-height: 1.25; font-weight: 600; margin: 18px 0 6px;
+    max-width: 300px; position: relative; z-index: 1;
+  }
+  .hero-sub { font-size: 14px; color: #C6CBDC; max-width: 280px; line-height: 1.5; position: relative; z-index: 1; }
+
+  /* ---- Screens ---- */
+  main { flex: 1; padding: 18px 18px 100px; }
+  .screen { display: none; animation: fade .25s ease; }
+  .screen.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 22px 0 12px; }
+  .section-head:first-child { margin-top: 0; }
+  .section-head h2 { font-size: 16px; font-weight: 600; margin: 0; }
+  .section-count { font-size: 12.5px; color: var(--ink-soft); }
+
+  /* Quick actions on Home */
+  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .quick-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    cursor: pointer;
+  }
+  .quick-card svg { width: 22px; height: 22px; color: var(--teal); }
+  .quick-card .qc-title { font-weight: 600; font-size: 13.5px; margin-top: 10px; }
+  .quick-card .qc-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  /* Service cards — flat, left accent bar, not uniform SaaS shadow */
+  .service {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent, var(--teal));
+    border-radius: 10px;
+    padding: 14px 14px 14px 14px;
+    margin-bottom: 10px;
+  }
+  .service-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .service h3 { font-size: 14.5px; font-weight: 600; margin: 0 0 4px; }
+  .service p { font-size: 12.8px; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+  .service-order {
+    flex-shrink: 0;
+    font-size: 12px; font-weight: 600;
+    color: var(--accent, var(--teal));
+    background: transparent;
+    border: 1px solid var(--accent, var(--teal));
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .service-order:active { transform: scale(0.97); }
+  .service-order.full { width: 100%; margin-top: 10px; padding: 10px; }
+
+  .option-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 7px 12px 7px 10px;
+    font-size: 12.5px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .chip input { accent-color: var(--teal); width: 15px; height: 15px; margin: 0; flex-shrink: 0; }
+  .chip:has(input:checked) { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+  /* Fiches produits — ordinateurs */
+  .product-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .product-photo-wrap { position: relative; background: var(--navy); }
+  .product-photo { display: block; width: 100%; height: auto; }
+  .product-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--amber); color: var(--navy);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+    padding: 4px 10px; border-radius: 20px;
+  }
+  .product-stock {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(20,33,61,0.75); color: #fff;
+    font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px;
+  }
+  .product-body { padding: 16px; }
+  .product-title { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+  .product-ref { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 10px; }
+  .product-price { font-family: 'Space Grotesk', sans-serif; font-size: 21px; font-weight: 700; color: var(--amber-deep); margin-bottom: 14px; }
+  .product-specs { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+  .product-specs li {
+    font-size: 13px; line-height: 1.45; color: var(--ink);
+    padding-left: 16px; position: relative;
+  }
+  .product-specs li::before {
+    content: ""; position: absolute; left: 0; top: 7px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--teal);
+  }
+  .product-specs li strong { font-weight: 600; }
+  .product-warranty {
+    font-size: 12px; color: var(--teal); font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  /* Pricing table */
+  .price-table { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .price-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 15px; border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .price-row:last-child { border-bottom: none; }
+  .price-name { font-weight: 500; }
+  .price-note { font-size: 11.5px; color: var(--ink-soft); display: block; margin-top: 2px; }
+  .price-amount { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--amber-deep); white-space: nowrap; }
+  .quote-note {
+    font-size: 12.5px; color: var(--ink-soft); background: var(--panel);
+    border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; margin-top: 12px; line-height: 1.5;
+  }
+
+  /* Contact */
+  .contact-card {
+    background: var(--navy); color: var(--cream);
+    border-radius: 16px; padding: 22px 20px; text-align: left;
+  }
+  .contact-card h3 { font-size: 17px; margin: 0 0 6px; font-weight: 600; }
+  .contact-card p { font-size: 13px; color: #C6CBDC; margin: 0 0 18px; line-height: 1.5; }
+  .wa-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--amber); color: var(--navy);
+    font-weight: 600; font-size: 14px;
+    border: none; border-radius: 12px; padding: 13px;
+    width: 100%; cursor: pointer;
+  }
+  .wa-btn:active { transform: scale(0.985); }
+  .wa-btn svg { width: 18px; height: 18px; }
+  .contact-meta { margin-top: 16px; font-size: 12.5px; color: var(--ink-soft); }
+  .contact-meta strong { color: var(--ink); }
+
+  /* Bottom nav — app shell */
+  nav.tabbar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--panel);
+    border-top: 1px solid var(--line);
+    display: flex;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  nav.tabbar button {
+    flex: 1;
+    background: none; border: none;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 0 8px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  nav.tabbar button svg { width: 21px; height: 21px; }
+  nav.tabbar button .tab-label { font-size: 10.5px; font-weight: 500; }
+  nav.tabbar button.active { color: var(--teal); }
+
+  @media (min-width: 481px) {
+    .app { border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="brand-row">
+      <div class="brand-mark">JT</div>
+      <div>
+        <div class="brand">J-Tech Design</div>
+        <div class="tagline">Graphisme &amp; maintenance informatique</div>
+      </div>
+    </div>
+    <h1 class="hero-title" id="hero-title">Un dépannage, un visuel, une commande sur WhatsApp.</h1>
+    <p class="hero-sub" id="hero-sub">Installation Windows &amp; Linux, suite Office, Adobe, et créations graphiques — sans détour, directement par message.</p>
+  </header>
+
+  <main>
+
+    <!-- ACCUEIL -->
+    <section class="screen active" id="screen-accueil">
+      <div class="section-head"><h2>Accès rapide</h2></div>
+      <div class="quick-grid">
+        <div class="quick-card" onclick="goTo('tarifs')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h10"/></svg>
+          <div class="qc-title">Tarifs installation</div>
+          <div class="qc-sub">Windows &amp; Linux</div>
+        </div>
+        <div class="quick-card" onclick="goTo('pc')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 18.5h20M9.5 15v3.5M14.5 15v3.5"/></svg>
+          <div class="qc-title">Ordinateurs</div>
+          <div class="qc-sub">Neuf, garantis</div>
+        </div>
+        <div class="quick-card" onclick="goTo('services')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16l4.6-6.1a1 1 0 0 1 1.4-.2l3 2.3 3.6-4.6a1 1 0 0 1 1.6.1L21 12M4 20h16"/></svg>
+          <div class="qc-title">Création graphique</div>
+          <div class="qc-sub">Logo, affiche, dépliant</div>
+        </div>
+        <div class="quick-card" onclick="goTo('services')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 4v16M4 9h16"/></svg>
+          <div class="qc-title">Tous les services</div>
+          <div class="qc-sub">OS, Office, Adobe…</div>
+        </div>
+        <div class="quick-card" onclick="goTo('contact')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 4h-17A1.5 1.5 0 0 0 2 5.5v13A1.5 1.5 0 0 0 3.5 20h17a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 20.5 4Z"/><path d="m3 6 9 6 9-6"/></svg>
+          <div class="qc-title">Contacter</div>
+          <div class="qc-sub">Réponse sur WhatsApp</div>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Populaire</h2><span class="section-count">Installation OS</span></div>
+      <div class="price-table">
+        <div class="price-row">
+          <div><div class="price-name">Windows 8 / 10</div></div>
+          <div class="price-amount">8 000 F</div>
+        </div>
+        <div class="price-row">
+          <div><div class="price-name">Windows 11</div></div>
+          <div class="price-amount">10 000 F</div>
+        </div>
+        <div class="price-row">
+          <div><div class="price-name">Linux</div></div>
+          <div class="price-amount">13 000 F</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="screen" id="screen-services">
+      <div class="section-head"><h2>Systèmes &amp; installation</h2></div>
+      <div class="service" style="--accent:#3A6B6B">
+        <div class="service-top">
+          <div>
+            <h3>Installation de systèmes d'exploitation</h3>
+            <p>Choisis le système à installer.</p>
+          </div>
+        </div>
+        <div class="option-chips" id="chips-os">
+          <label class="chip"><input type="checkbox" value="Windows 8"><span>Windows 8</span></label>
+          <label class="chip"><input type="checkbox" value="Windows 10"><span>Windows 10</span></label>
+          <label class="chip"><input type="checkbox" value="Windows 11"><span>Windows 11</span></label>
+          <label class="chip"><input type="checkbox" value="Linux"><span>Linux</span></label>
+        </div>
+        <button class="service-order full" style="color:#3A6B6B;border-color:#3A6B6B" onclick="orderChips('chips-os','Bonjour, je voudrais une installation de système d’exploitation.','Système souhaité')">Commander</button>
+      </div>
+      <div class="service" style="--accent:#3A6B6B">
+        <div class="service-top">
+          <div>
+            <h3>Suite Office</h3>
+            <p>Choisis la version à installer.</p>
+          </div>
+        </div>
+        <div class="option-chips" id="chips-office">
+          <label class="chip"><input type="checkbox" value="Office 2016"><span>Office 2016</span></label>
+          <label class="chip"><input type="checkbox" value="Office 2019"><span>Office 2019</span></label>
+          <label class="chip"><input type="checkbox" value="Office 2021"><span>Office 2021</span></label>
+        </div>
+        <button class="service-order full" style="color:#3A6B6B;border-color:#3A6B6B" onclick="orderChips('chips-office','Bonjour, je voudrais installer la suite Office.','Version(s) souhaitée(s)')">Commander</button>
+      </div>
+      <div class="service" style="--accent:#3A6B6B">
+        <div class="service-top">
+          <div>
+            <h3>Utilitaires courants</h3>
+            <p>Choisis le ou les logiciels souhaités.</p>
+          </div>
+        </div>
+        <div class="option-chips" id="chips-utils">
+          <label class="chip"><input type="checkbox" value="VLC"><span>VLC</span></label>
+          <label class="chip"><input type="checkbox" value="Chrome"><span>Chrome</span></label>
+          <label class="chip"><input type="checkbox" value="Outils Google (Drive, Docs...)"><span>Outils Google</span></label>
+        </div>
+        <button class="service-order full" style="color:#3A6B6B;border-color:#3A6B6B" onclick="orderChips('chips-utils','Bonjour, je voudrais installer des utilitaires.','Logiciel(s) souhaité(s)')">Commander</button>
+      </div>
+
+      <div class="section-head"><h2>Créatif &amp; graphisme</h2></div>
+      <div class="service" style="--accent:#C9821F">
+        <div class="service-top">
+          <div>
+            <h3>Suite Adobe</h3>
+            <p>Choisis le ou les logiciels souhaités.</p>
+          </div>
+        </div>
+        <div class="option-chips" id="chips-adobe">
+          <label class="chip"><input type="checkbox" value="Photoshop"><span>Photoshop</span></label>
+          <label class="chip"><input type="checkbox" value="InDesign"><span>InDesign</span></label>
+          <label class="chip"><input type="checkbox" value="Illustrator"><span>Illustrator</span></label>
+          <label class="chip"><input type="checkbox" value="Premiere Pro"><span>Premiere Pro</span></label>
+          <label class="chip"><input type="checkbox" value="After Effects"><span>After Effects</span></label>
+        </div>
+        <button class="service-order full" style="color:#C9821F;border-color:#C9821F" onclick="orderChips('chips-adobe','Bonjour, je voudrais installer un logiciel Adobe.','Logiciel(s) souhaité(s)')">Commander</button>
+      </div>
+      <div class="service" style="--accent:#C9821F">
+        <div class="service-top">
+          <div>
+            <h3>Création graphique</h3>
+            <p>Choisis le type de création souhaité.</p>
+          </div>
+        </div>
+        <div class="option-chips" id="chips-graphic">
+          <label class="chip"><input type="checkbox" value="Logo"><span>Logo</span></label>
+          <label class="chip"><input type="checkbox" value="Affiche"><span>Affiche</span></label>
+          <label class="chip"><input type="checkbox" value="Dépliant"><span>Dépliant</span></label>
+        </div>
+        <button class="service-order full" style="color:#C9821F;border-color:#C9821F" onclick="orderChips('chips-graphic','Bonjour, je voudrais une création graphique.','Type(s) souhaité(s)')">Commander</button>
+      </div>
+    </section>
+
+    <!-- PC PORTABLES -->
+    <section class="screen" id="screen-pc">
+      <div class="section-head"><h2>Ordinateurs</h2><span class="section-count">Neuf &amp; garantis</span></div>
+      <div id="products-container"></div>
+    </section>
+
+    <!-- TARIFS -->
+    <section class="screen" id="screen-tarifs">
+      <div class="section-head"><h2>Installation de systèmes</h2></div>
+      <div class="price-table">
+        <div class="price-row">
+          <div><div class="price-name">Windows 8</div></div>
+          <div class="price-amount">8 000 F</div>
+        </div>
+        <div class="price-row">
+          <div><div class="price-name">Windows 10</div></div>
+          <div class="price-amount">8 000 F</div>
+        </div>
+        <div class="price-row">
+          <div><div class="price-name">Windows 11</div></div>
+          <div class="price-amount">10 000 F</div>
+        </div>
+        <div class="price-row">
+          <div><div class="price-name">Linux</div></div>
+          <div class="price-amount">13 000 F</div>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Logiciels &amp; graphisme</h2></div>
+      <div class="quote-note">
+        Office, suite Adobe et créations graphiques (logo, affiche, dépliant) sont établis sur devis selon le besoin. Écris sur WhatsApp pour un tarif précis.
+      </div>
+      <button class="wa-btn" style="margin-top:14px" onclick="orderWA('Bonjour, je voudrais un devis.')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5.1-1.3c1.4.8 3.1 1.3 4.9 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z" opacity="0"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.81.48 3.55 1.38 5.08L2 22l5.19-1.36a9.86 9.86 0 0 0 4.85 1.24h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.51 2 12.04 2zm5.78 14.05c-.24.68-1.4 1.31-1.93 1.36-.5.05-1.02.24-3.43-.73-2.9-1.17-4.77-4.08-4.92-4.27-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.43-.07.67.51.24.58.81 2 .89 2.15.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.58.17.29.76 1.26 1.64 2.04 1.13 1.01 2.08 1.32 2.36 1.47.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.65-.14.27.09 1.7.8 1.99.95.29.14.48.22.55.34.07.13.07.72-.17 1.4z"/></svg>
+        Demander un devis WhatsApp
+      </button>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="screen" id="screen-contact">
+      <div class="contact-card">
+        <h3>Écris-nous directement</h3>
+        <p>Toutes les commandes se font par WhatsApp — décris ton besoin, on te répond avec le tarif et les délais.</p>
+        <button class="wa-btn" onclick="orderWA('Bonjour, j’aimerais avoir des informations sur vos services.')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.81.48 3.55 1.38 5.08L2 22l5.19-1.36a9.86 9.86 0 0 0 4.85 1.24h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.51 2 12.04 2zm5.78 14.05c-.24.68-1.4 1.31-1.93 1.36-.5.05-1.02.24-3.43-.73-2.9-1.17-4.77-4.08-4.92-4.27-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.43-.07.67.51.24.58.81 2 .89 2.15.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.58.17.29.76 1.26 1.64 2.04 1.13 1.01 2.08 1.32 2.36 1.47.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.65-.14.27.09 1.7.8 1.99.95.29.14.48.22.55.34.07.13.07.72-.17 1.4z"/></svg>
+          Ouvrir WhatsApp
+        </button>
+        <div class="contact-meta"><strong>+229 01 68 48 21 93</strong> · commandes &amp; devis</div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar">
+    <button class="active" data-tab="accueil" onclick="goTo('accueil')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      <span class="tab-label">Accueil</span>
+    </button>
+    <button data-tab="services" onclick="goTo('services')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 4v16M4 9h16"/></svg>
+      <span class="tab-label">Services</span>
+    </button>
+    <button data-tab="pc" onclick="goTo('pc')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 18.5h20M9.5 15v3.5M14.5 15v3.5"/></svg>
+      <span class="tab-label">PC</span>
+    </button>
+    <button data-tab="tarifs" onclick="goTo('tarifs')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h10"/></svg>
+      <span class="tab-label">Tarifs</span>
+    </button>
+    <button data-tab="contact" onclick="goTo('contact')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 4h-17A1.5 1.5 0 0 0 2 5.5v13A1.5 1.5 0 0 0 3.5 20h17a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 20.5 4Z"/><path d="m3 6 9 6 9-6"/></svg>
+      <span class="tab-label">Contact</span>
+    </button>
+  </nav>
+
+</div>
+
+<script>
+  const WA_NUMBER = "2290168482193";
+
+  function goTo(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelector('.app').scrollTo?.(0,0);
+    window.scrollTo(0,0);
+  }
+
+  function orderWA(message) {
+    const url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
+  }
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("service-worker.js").catch(() => {});
+    });
+  }
+  function orderChips(containerId, baseMessage, label) {
+    const container = document.getElementById(containerId);
+    const checked = Array.from(container.querySelectorAll('input:checked')).map(i => i.value);
+    let message = baseMessage;
+    if (checked.length > 0) {
+      message += ' ' + label + ' : ' + checked.join(', ') + '.';
+    }
+    orderWA(message);
+  }
+
+  // Transforme **texte** en <strong>texte</strong> et échappe le HTML dangereux
+  function formatSpec(text) {
+    const escaped = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    return escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  // Génère les fiches produits à partir du fichier produits.js
+  function renderProducts() {
+    const container = document.getElementById("products-container");
+    if (!container || typeof PRODUITS === "undefined") return;
+
+    container.innerHTML = PRODUITS.map(p => `
+      <div class="product-card">
+        <div class="product-photo-wrap">
+          <img class="product-photo" src="${p.image}" alt="${p.titre}" loading="lazy">
+          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
+          ${p.stock ? `<span class="product-stock">${p.stock}</span>` : ""}
+        </div>
+        <div class="product-body">
+          <h3 class="product-title">${p.titre}</h3>
+          <div class="product-ref">Réf. ${p.reference}</div>
+          <div class="product-price">${p.prix}</div>
+          <ul class="product-specs">
+            ${p.caracteristiques.map(c => `<li>${formatSpec(c)}</li>`).join("")}
+          </ul>
+          ${p.garantie ? `<div class="product-warranty">${p.garantie}</div>` : ""}
+          <button class="service-order full" style="color:#C9821F;border-color:#C9821F" onclick="orderWA('Bonjour, je souhaite vérifier la disponibilité du ${p.titre.replace(/'/g, "’")}, réf. ${p.reference}.')">Vérifier la disponibilité</button>
+        </div>
+      </div>
+    `).join("");
+  }
+  renderProducts();
+</script>
+
+</body>
+</html>
