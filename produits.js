@@ -107,7 +107,10 @@ const PRODUITS = [
       "**Webcam** HD intégrée — adaptateur LENOVO",
       "**OS :** Windows 11 Professionnel 64 bits authentique"
     ],
-      garantie: "Garantie vendeur — 12 mois"---------------------------------------------------------------------
+    
+      garantie: "Garantie vendeur — 12 mois"
+    },
+   ---------------------------------------------------------------------
      MODÈLE VIDE À COPIER POUR UN NOUVEL ARTICLE (décommente et remplis) :
 
   {
