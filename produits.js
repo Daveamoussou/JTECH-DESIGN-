@@ -75,7 +75,39 @@ const PRODUITS = [
     garantie: "Garantie vendeur — 12 mois"
   },
 
-  /* ---------------------------------------------------------------------
+    {
+    // Photo : doit être un fichier présent dans le même dossier sur GitHub
+    image: "lenovo-t16g1",
+
+    // Petit badge affiché sur la photo (ex: "Neuf en carton", "Occasion")
+    badge: "Neuf en carton",
+
+    // Affiché en haut à droite de la photo
+    stock: "1 unité en stock",
+
+    // Nom complet de l'ordinateur
+    titre: "LENOVO THINKPAD T16 GEN 1",
+
+    // Référence — sert aussi au message envoyé sur WhatsApp
+    reference: "CP-4B62",
+
+    // Prix affiché (écris-le exactement comme tu veux qu'il apparaisse)
+    prix: "400 000 FCFA",
+
+    // Liste des caractéristiques — une ligne par élément de la liste.
+    // Tu peux mettre **avant et après** un mot pour le mettre en gras,
+    // comme ici avec **Processeur :**
+    caracteristiques: [
+      "**Processeur :** INTEL COREI7 -1265U 12Th GEN 10coeur/12CPU 1.8Ghz avec Turbo Boost à 4.8Ghz",
+      "**Mémoire :** 16 Go — **Stockage :** 512 Go SSD",
+      "**Écran :** 16/  avec résolution Full HD (1920 x 1200) Écran Anti-reflet LED FHD - ** Dalle IPS : couleurs lumineuses et angles de vision larges ",
+      "**Graphique :** INTEL IRIS Xe GRAPHIC",
+      "**Autonomie :** offrant jusqu'à 6H d'autonomie* (selon la coNfiguration et l'utilisation)",
+      "**Connectique :** Wi-Fi 6 AC et Bluetooth 2 ports USB 3.0 ET HDMI et Type - c",
+      "**Webcam** HD intégrée — adaptateur LENOVO",
+      "**OS :** Windows 11 Professionnel 64 bits authentique"
+    ],
+      garantie: "Garantie vendeur — 12 mois"---------------------------------------------------------------------
      MODÈLE VIDE À COPIER POUR UN NOUVEL ARTICLE (décommente et remplis) :
 
   {
