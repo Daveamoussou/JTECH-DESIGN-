@@ -509,7 +509,7 @@
 history.replaceState({page: 'home'}, '', location.pathname);
 window.addEventListener('popstate', function(e){
   goto((e.state && e.state.page) || 'home', true);
-});
+
   }
 
   function orderWA(message) {
