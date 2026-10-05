@@ -499,12 +499,17 @@
 <script>
   const WA_NUMBER = "2290168482193";
 
-  function goTo(name) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + name).classList.add('active');
-    document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-    document.querySelector('.app').scrollTo?.(0,0);
-    window.scrollTo(0,0);
+  function goto(page, fromPop){
+  // ... ton code actuel de la fonction, inchangé ...
+  if(!fromPop && !(history.state && history.state.page === page)){
+    history.pushState({page: page}, '', '#' + page);
+  }
+}
+
+history.replaceState({page: 'home'}, '', location.pathname);
+window.addEventListener('popstate', function(e){
+  goto((e.state && e.state.page) || 'home', true);
+});
   }
 
   function orderWA(message) {
